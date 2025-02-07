@@ -38,3 +38,18 @@
 - [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
 
 
+## Useful commands
+
+App create command
+`mn create-app --build=gradle --jdk=17 --lang=groovy --test=spock --features=data-jdbc,testcontainers,tomcat-server,mysql com.example.demo`
+
+devone database was manually created locally, user table is re-created automatically at each run.
+
+create user script:
+`curl -X "POST" "http://localhost:8080/user" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{ "name": "user one", "admin": false, "loginCount": 0}'`
+
+get users script:
+`curl -X "GET" "http://localhost:8080/user/list" \
+     -H 'Content-Type: application/json; charset=utf-8'`
