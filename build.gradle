@@ -1,0 +1,69 @@
+plugins {
+    id("groovy") 
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.4.4"
+    id("io.micronaut.aot") version "4.4.4"
+}
+
+version = "0.1"
+group = "webmicro.two"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly("io.micronaut.data:micronaut-data-processor")
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.groovy:micronaut-runtime-groovy")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    implementation("io.micronaut.validation:micronaut-validation")
+    compileOnly("io.micronaut:micronaut-http-client")
+    compileOnly("io.micronaut:micronaut-http-validation")
+    compileOnly("io.micronaut.serde:micronaut-serde-processor")
+    compileOnly("io.micronaut.servlet:micronaut-servlet-processor")
+    compileOnly("io.micronaut.validation:micronaut-validation-processor")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("com.mysql:mysql-connector-j")
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.testcontainers:mysql")
+    testImplementation("org.testcontainers:spock")
+    testImplementation("org.testcontainers:testcontainers")
+}
+
+
+application {
+    mainClass = "webmicro.two.Application"
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+
+graalvmNative.toolchainDetection = false
+
+micronaut {
+    runtime("tomcat")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("webmicro.two.*")
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+        replaceLogbackXml = true
+    }
+}
+
+
+
